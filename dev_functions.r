@@ -24,7 +24,7 @@ add_common_name <- function(
   }
 }
 fill_in_next_common_name <- function(db = "names_common.csv") {
-  library(tidyverse)
+  library(tidyverse, quietly = TRUE)
   df <- read.csv(db)
   missing <- df |> 
     dplyr::filter(is.na(common))
@@ -35,9 +35,17 @@ fill_in_next_common_name <- function(db = "names_common.csv") {
     cat(paste0("\n", str_to_title(tx_lvl), " name:          ", tx))
     cat("\nEnter common name:     ")
     cmn <- readLines("stdin", n = 1)
+    if (tolower(cmn) == "exit") {
+      message("exiting...")
+      return()
+    }
     message(paste("\n          Common name:", cmn))
-    cat("\nIs this correct (Y/y)? ")
+    cat("\nIs this correct (Yy)? ")
     yn <- readLines("stdin", n = 1)
+    if (tolower(yn) == "exit") {
+      message("exiting...")
+      return()
+    }
     if (tolower(yn) == "y") {
       cat("\n☺\n")
       cmn
